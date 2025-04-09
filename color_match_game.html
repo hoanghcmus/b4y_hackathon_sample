@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Color Match Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    #game-container {
+      text-align: center;
+      width: 400px;
+    }
+    /* Sample Color Section */
+    #sample-section {
+      margin-bottom: 30px;
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    #sample-section h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #555;
+    }
+    #target-color {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto;
+      border: 2px solid #333;
+      border-radius: 10px;
+      transition: background-color 0.5s;
+    }
+    /* Select Color Section */
+    #select-section {
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    #select-section h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #555;
+    }
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 10px;
+      justify-content: center;
+    }
+    .box {
+      width: 100px;
+      height: 100px;
+      background-color: #ccc;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s, opacity 0.3s;
+    }
+    .box:hover {
+      transform: scale(1.1);
+    }
+    .box.correct {
+      animation: flash 0.5s;
+    }
+    #score {
+      font-size: 24px;
+      margin-top: 20px;
+      color: #333;
+      transition: color 0.3s;
+    }
+    @keyframes flash {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <h1>CSS Color Match Game</h1>
+  <div id="game-container">
+    <!-- Sample Color Section -->
+    <div id="sample-section">
+      <h2>Sample Color</h2>
+      <div id="target-color"></div>
+    </div>
+    <!-- Select Color Section -->
+    <div id="select-section">
+      <h2>Select Matching Color</h2>
+      <div id="grid">
+        <div class="box" onclick="checkMatch(this)"></div>
+        <div class="box" onclick="checkMatch(this)"></div>
+        <div class="box" onclick="checkMatch(this)"></div>
+        <div class="box" onclick="checkMatch(this)"></div>
+        <div class="box" onclick="checkMatch(this)"></div>
+        <div class="box" onclick="checkMatch(this)"></div>
+      </div>
+    </div>
+    <div id="score">Score: 0</div>
+  </div>
+
+  <script>
+    let score = 0;
+    const targetColorDiv = document.getElementById('target-color');
+    const boxes = document.querySelectorAll('.box');
+    const scoreDisplay = document.getElementById('score');
+
+    function getRandomColor() {
+      return `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+    }
+
+    function setColors() {
+      const correctColor = getRandomColor();
+      targetColorDiv.style.backgroundColor = correctColor;
+
+      const correctIndex = Math.floor(Math.random() * boxes.length);
+      boxes.forEach((box, index) => {
+        box.style.backgroundColor = (index === correctIndex) ? correctColor : getRandomColor();
+        box.classList.remove('correct'); // Reset animation
+      });
+    }
+
+    function checkMatch(box) {
+      if (box.style.backgroundColor === targetColorDiv.style.backgroundColor) {
+        score++;
+        box.classList.add('correct'); // Trigger flash animation
+        scoreDisplay.textContent = `Score: ${score}`;
+        scoreDisplay.style.color = '#28a745'; // Green flash
+        setTimeout(() => {
+          scoreDisplay.style.color = '#333';
+          setColors(); // New round
+        }, 300);
+      } else {
+        score = 0;
+        scoreDisplay.textContent = `Score: ${score}`;
+        scoreDisplay.style.color = '#dc3545'; // Red flash
+        setTimeout(() => scoreDisplay.style.color = '#333', 300);
+      }
+    }
+
+    // Start the game
+    setColors();
+  </script>
+</body>
+</html>
